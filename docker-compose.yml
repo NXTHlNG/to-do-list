@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+
+  mongo:
+    container_name: mongo-to-do-list
+    image: 'mongo:4.2.16-bionic'
+    ports:
+      - "27017"
+    environment:
+      MONGO_INITDB_DATABSE: toDoList
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./db-data/mongo/:/data/db
+
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - ~/appdocuments:/app/data/documents
